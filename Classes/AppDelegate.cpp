@@ -1,12 +1,11 @@
 #include "AppDelegate.h"
-//#include "Scenes/Loading.h"
 #include "AppMacros.h"
 #include "SimpleAudioEngine.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "Scenes/MainMenu.h"
+#include "Scenes/GameScene.h"
 
 #include <ADLib.h>
 USING_NS_CC;
@@ -16,7 +15,7 @@ AppDelegate::AppDelegate() {
 
 }
 
-AppDelegate::~AppDelegate() 
+AppDelegate::~AppDelegate()
 {
 }
 
@@ -176,10 +175,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
 
-    
+
     //std::ifstream is(CCFileUtils::sharedFileUtils()->fullPathFromRelativeFile());
     // create a scene. it's an autorelease object
-    CCScene *pScene = MainMenu::scene();
+    CCScene *pScene = GameScene::scene();
 
     // run
     pDirector->runWithScene(pScene);

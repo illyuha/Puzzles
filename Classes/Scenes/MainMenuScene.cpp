@@ -1,19 +1,19 @@
-#include "MainMenu.h"
+#include "MainMenuScene.h"
 #include <ADLib/ADString.h>
 
 using namespace cocos2d;
 
-MainMenu::MainMenu()
+MainMenuScene::MainMenuScene()
 {
 }
 
-CCScene* MainMenu::scene()
+CCScene* MainMenuScene::scene()
 {
     // 'scene' is an autorelease object
     CCScene *scene = CCScene::create();
 
     // 'layer' is an autorelease object
-    MainMenu *layer = MainMenu::create();
+    MainMenuScene *layer = MainMenuScene::create();
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -23,10 +23,10 @@ CCScene* MainMenu::scene()
 }
 
 
-MainMenu* MainMenu::create()
+MainMenuScene * MainMenuScene::create()
 {
 
-    MainMenu *pRet = new MainMenu();
+    MainMenuScene *pRet = new MainMenuScene();
     if (pRet && pRet->init())
     {
         pRet->autorelease();
@@ -40,12 +40,12 @@ MainMenu* MainMenu::create()
     }
 }
 
-void MainMenu::onBackClick()
+void MainMenuScene::onBackClick()
 {
     CCLog("Back clicked");
 }
 
-bool MainMenu::init()
+bool MainMenuScene::init()
 {
     if(!SceneStyle::init())
         return false;
@@ -56,11 +56,12 @@ bool MainMenu::init()
     const CCPoint ORIGIN = ADScreen::getOrigin();
     const CCSize VISIBLE_SIZE = ADScreen::getVisibleSize();
 
-    CCSprite* logo = CCSprite::create("main-menu/facebook_logo.png");
+//    CCSprite* logo = CCSprite::create("main-menu/facebook_logo.png");
 
-    logo->setPosition(ORIGIN + VISIBLE_SIZE*0.5f);
-    this->addChild(logo);
+//    logo->setPosition(ORIGIN + VISIBLE_SIZE*0.5f);
+//    this->addChild(logo);
 
     return true;
 }
+
 

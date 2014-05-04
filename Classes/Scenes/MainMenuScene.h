@@ -3,16 +3,14 @@
 #include "cocos2d-A.h"
 #include "SceneStyle.h"
 
-class MainMenu: public SceneStyle
+class MainMenuScene: public SceneStyle
 {
 public:
-    MainMenu();
+    MainMenuScene();
     static cocos2d::CCScene* scene();
-    static MainMenu* create();
+    static MainMenuScene* create();
 
 private:
-
-
     bool init();
     void onBackClick();
 };

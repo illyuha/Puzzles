@@ -2,6 +2,7 @@
 #include "../Classes/AppDelegate.h"
 #include <Testing/ADDeviceEmulator.h>
 #include <ADLib/Device/ADAds.h>
+
 using namespace cocos2d;
 
 int CALLBACK WinMain(
@@ -11,26 +12,28 @@ int CALLBACK WinMain(
         _In_  int
         )
 {
-    //Create AppDelegate
+    // TODO: find out what all the third-party code does
+
+    // Q: [non-important bu interesting none the less] What on Earth is handle in C++? (^)
+
     AppDelegate app;
 
-    //Configure emulator
-    ADDeviceEmulator* emulator = ADDeviceEmulator::getInstance();
+    ADDeviceEmulator * emulator = ADDeviceEmulator::getInstance();
 
-
+    // TODO: why custom? why exactly such arguments?
+    // Configure emulator
     DeviceConfig custom(Device::Custom);
     custom.setDeviceName("Custom");
     custom.setScreenDencity(1.0);
     custom.setScreenWidth(1920);
     custom.setScreenHeight(1200);
+
     emulator->setCustomDevice(custom);
 
-
     emulator->setFitTheScreen(true);
-    emulator->setDevice(Device::IPad2);
+    emulator->setDevice(Device::IPad2); // TODO: why IPad2?
     emulator->setLanguage("en");
     emulator->setOrientation(Orientation::Portrait);
-
 
     return emulator->run();
 }

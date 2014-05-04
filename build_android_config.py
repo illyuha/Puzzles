@@ -24,7 +24,7 @@ project.addModule('android_ADHttp_None')
 
 
 project.project_name = 'Puzzles'
-project.package_name = 'com.spas.mypuzzles'
+project.package_name = 'com.spas.puzzles'
 project.version_name = "1.00"
 project.version_code = "1"
 project.resources_compile_task = createResourceCompilerTask(

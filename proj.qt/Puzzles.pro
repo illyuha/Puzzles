@@ -37,17 +37,23 @@ DEFINES += WIN32 \
             _CRT_SECURE_NO_WARNINGS \
             _SCL_SECURE_NO_WARNINGS
 
-SOURCES += main.cpp \
+SOURCES += \
+    main.cpp \
     ../Classes/AppDelegate.cpp \
-    PurchaseEmulator.cpp \
-    ../Classes/Scenes/MainMenu.cpp \
-    ../Classes/Scenes/SceneStyle.cpp
+    ../Classes/Figure.cpp \
+    ../Classes/Scenes/GameScene.cpp \
+    ../Classes/Scenes/MainMenuScene.cpp \
+    ../Classes/Scenes/SceneStyle.cpp \
+    PurchaseEmulator.cpp
 
 HEADERS += \
-    ../Classes/AppMacros.h \
     ../Classes/AppDelegate.h \
-    main.h \
-    ../Classes/Scenes/MainMenu.h \
-    ../Classes/Scenes/SceneStyle.h
+    ../Classes/AppMacros.h \
+    ../Classes/cocos2d-A.h \
+    ../Classes/Figure.h \
+    ../Classes/Scenes/GameScene.h \
+    ../Classes/Scenes/MainMenuScene.h \
+    ../Classes/Scenes/SceneStyle.h \
+    main.h
 
 
