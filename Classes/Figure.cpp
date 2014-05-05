@@ -55,14 +55,8 @@ void Figure::drawImage()
 
 bool Figure::ccTouchBegan(CCTouch * pTouch, CCEvent * pEvent)
 {
-    //this->setRotation(0.5);
-
-    //setAnchorPoint(ccp(0.5,0.5));
-
-    //CCLog("%f %f", getPositionX(), getPositionY());
-    //CCLog("%f %f",getContentSize().width,getContentSize().height);
-
-    CCLog("began: %f %f",getAnchorPoint().x,getAnchorPoint().y);
+//    CCLog("began: %f %f",getAnchorPoint().x,getAnchorPoint().y);
+//    CCLog("touch: %f %f",pTouch->getLocation().x,pTouch->getLocation().y);
 
     auto touchLocation = pTouch->getLocation();
     float ancx = getAnchorPoint().x, ancy = getAnchorPoint().y;
@@ -72,22 +66,20 @@ bool Figure::ccTouchBegan(CCTouch * pTouch, CCEvent * pEvent)
             uy = getPositionY() + (1.0 - ancy) * getContentSize().height,
             x = touchLocation.x, y = touchLocation.y;
 
-    // TODO: find out what's wrong (when missing also)
+//    CCLog("y: %f %f %f",dy,y,uy);
+//    CCLog("x: %f %f %f",lx,x,rx);
 
     //if (touchHitsFigure(pTouch->getLocation(),this))
     if (lx <= x && x <= rx && dy <= y && y <= uy)
     {
-        CCLog("%f %f %f",uy,y,dy);
         setAnchorPoint(ccp((x - lx) / (rx - lx), (y - dy) / (uy - dy)));
-        CCLog("after hit: %f %f",getAnchorPoint().x,getAnchorPoint().y);
-        //CCLog("Hits");
+        setPosition(pTouch->getLocation());
+//        CCLog("after hit: %f %f",getAnchorPoint().x,getAnchorPoint().y);
         return true;
     }
     else
     {
-        setAnchorPoint(ccp(0.5,0.5));
-        CCLog("after miss: %f %f",getAnchorPoint().x,getAnchorPoint().y);
-        //CCLog("Misses");
+//        CCLog("Misses");
         return false;
     }
 }
@@ -95,13 +87,11 @@ bool Figure::ccTouchBegan(CCTouch * pTouch, CCEvent * pEvent)
 void Figure::ccTouchMoved(CCTouch * pTouch, CCEvent * pEvent)
 {
     setPosition(pTouch->getLocation());
-    //CCLog("after moved: %f %f",getAnchorPoint().x,getAnchorPoint().y);
+    //CCLog("moved location: %f %f",pTouch->getLocation().x,pTouch->getLocation().y);
 }
 
 void Figure::ccTouchEnded(CCTouch * pTouch, CCEvent * pEvent)
 {
-//    setAnchorPoint(ccp(0.5,0.5));
-    CCLog("after ended: %f %f",getAnchorPoint().x,getAnchorPoint().y);
 }
 
 //void Figure::ccTouchCancelled(CCTouch * pTouch, CCEvent * pEvent)
