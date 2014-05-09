@@ -44,7 +44,7 @@ SOURCES += \
     ../Classes/Scenes/GameScene.cpp \
     ../Classes/Scenes/MainMenuScene.cpp \
     ../Classes/Scenes/SceneStyle.cpp \
-    PurchaseEmulator.cpp
+    PurchaseEmulator.cpp \
 
 HEADERS += \
     ../Classes/AppDelegate.h \
@@ -54,6 +54,5 @@ HEADERS += \
     ../Classes/Scenes/GameScene.h \
     ../Classes/Scenes/MainMenuScene.h \
     ../Classes/Scenes/SceneStyle.h \
-    main.h
-
+    main.h \
 

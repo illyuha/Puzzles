@@ -16,6 +16,10 @@ int CALLBACK WinMain(
 
     // Q: [non-important bu interesting none the less] What on Earth is handle in C++? (^)
 
+    // TODO: use sprite sheet
+
+    // Q: when should I used pointers?
+
     AppDelegate app;
 
     ADDeviceEmulator * emulator = ADDeviceEmulator::getInstance();

@@ -1,31 +1,38 @@
 #ifndef FIGURE_H
 #define FIGURE_H
 #include "cocos2d.h"
+#include <vector>
+
 
 using namespace cocos2d;
+using namespace std;
 
-// Class for handling motions, transformations etc. of images
+enum FigureType
+{
+    Trapezium
+};
 
-class Figure : public CCTouchDelegate, public CCNodeRGBA
+class Figure : public CCNodeRGBA
 {
 private:
+//    vector<CCPoint> _vertices;
     CCSprite * _image;
-    Figure(const CCPoint &);
+
+    explicit Figure(const FigureType & type = Trapezium, const CCPoint & startPos = ccp(0,0));
+    void initVertices(const FigureType &);
     void drawImage();
-    bool ccTouchBegan(CCTouch *, CCEvent *);
-    void ccTouchMoved(CCTouch *, CCEvent *);
-    void ccTouchEnded(CCTouch *, CCEvent *);
-//    void ccTouchCancelled(CCTouch *, CCEvent *);
     void onExit();
+
+    Figure(const Figure &);
+    Figure & operator=(const Figure &);
 
 public:
     // Q: what's the point of using the static method instead of constructor?
     // A: Cocos requires this method
-    static Figure * create(const CCPoint &);
+    static Figure * create(const FigureType &, const CCPoint &);
     ~Figure();
-    void startTrackingTouch();
-    void stopTrackingTouch();
 
 };
+
 
 #endif // FIGURE_H

@@ -187,11 +187,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     initAds();
 
-    //Init ADMenuItem
-    ADMenuItem::setAllClicksAction([](){
-        ADSoundManager::playSoundEffect("music/choose.wav");
-    });
-
 
     ADStorage::loadInitialData();
     return true;
