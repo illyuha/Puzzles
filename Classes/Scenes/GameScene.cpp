@@ -1,18 +1,18 @@
 #include "GameScene.h"
 #include <ADLib/ADString.h>
 
+//const int GameScene::MAX_DELTA_TOUCH_TIME = 7000;
+const float GameScene::MAX_DELTA_TOUCH_DISTANCE = 10;
 
 void GameScene::initFigures()
 {
-    _figures.resize(2);
-    const CCPoint ORIGIN = ADScreen::getOrigin();
-    _figures[0] = Figure::create(Trapezium,ccp(200,100+ORIGIN.y));
-    _figures[1] = Figure::create(Trapezium,ccp(400,300+ORIGIN.y));
+    _gameManager.loadFigures(_figures);
     for (int i = 0; i < _figures.size(); ++i)
         addChild(_figures[i]);
 }
 
-GameScene::GameScene()
+GameScene::GameScene():
+    _firstTouchId(-1), _gameManager(GameManager::getInstance())
 {
 }
 
@@ -67,7 +67,6 @@ bool GameScene::init()
 
     // TODO: return false if something wrong happens
 
-
 //    schedule(schedule_selector(GameScene::onTick));
 
     CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, false);
@@ -75,66 +74,132 @@ bool GameScene::init()
     return true;
 }
 
+//long f()
+//{
+//    struct tm t;
+//    t.tm
+//    struct timespec now;
+//    clock_gettime(CLOCK_MONOTONIC, &now);
+//    return now.tv_sec*1000000000LL + now.tv_nsec;
+//    SYSTEMTIME touchTime;
+//    GetSystemTime(&touchTime);
+//    return touchTime.wSecond * 1000 + touchTime.wMilliseconds;
+//}
+
 bool GameScene::ccTouchBegan(CCTouch * touch, CCEvent *)
 {
-    CCPoint touchLocation = touch->getLocation();
-    _selectedFigure = NULL;
-    for (int i = 0; i < _figures.size() && _selectedFigure == NULL; ++i)
+//    if (_firstTouchId == -1)
     {
-       Figure * fig = _figures[i];
-       if (fig->boundingBox().containsPoint(touchLocation))
-           _selectedFigure = fig;
+        CCPoint touchLocation = touch->getLocation();
+        _selectedFigure = NULL;
+        for (int i = 0; i < _figures.size() && _selectedFigure == NULL; ++i)
+        {
+           Figure * fig = _figures[i];
+           if (fig->movable() && fig->boundingBox().containsPoint(touchLocation))
+               _selectedFigure = fig;
+        }
+        if (_selectedFigure != NULL)
+        {
+//            _firstTouchTime = f();
+            _firstTouchId = touch->getID();
+            _firstTouchPosition = touchLocation;
+            return true;
+        }
+        else
+        {
+//            _firstTouchTime = 0;
+            _firstTouchId = -1;
+            _firstTouchPosition = ccp(-1,-1);
+            return false;
+        }
     }
-    return (_selectedFigure != NULL);
+//    else
+//    {
+//        return true;
+//    }
 }
 
 void GameScene::ccTouchMoved(CCTouch * touch, CCEvent *)
 {
-    if (_selectedFigure != NULL)
+//    if (_firstTouchId == touch->getID())
     {
-        CCPoint touchLocation = convertTouchToNodeSpace(touch);
-
-        // Q: is it a good decision?
-        ///
-        if (!_selectedFigure->boundingBox().containsPoint(touchLocation))
+        if (_selectedFigure != NULL)
         {
-            // or call ccTouchEnded?
-//            _selectedFigure = NULL; // or just return?
-            return;
-        }
-        ///
+            CCPoint touchLocation = convertTouchToNodeSpace(touch);
 
-        CCPoint prevTouchLocation = convertToNodeSpace(touch->getPreviousLocation());
-        CCPoint translation = ccpSub(touchLocation,prevTouchLocation);
-        CCRect selRect(_selectedFigure->getPositionX()+translation.x,
-                 _selectedFigure->getPositionY()+translation.y,
-                 _selectedFigure->getContentSize().width,
-                 _selectedFigure->getContentSize().height);
-
-        const CCPoint ORIGIN = ADScreen::getOrigin();
-        float lx = selRect.getMinX() - _selectedFigure->getAnchorPoint().x * _selectedFigure->getContentSize().width - ORIGIN.x,
-                by = selRect.getMinY() - _selectedFigure->getAnchorPoint().y * _selectedFigure->getContentSize().height - ORIGIN.y,
-                rx = selRect.getMaxX() - _selectedFigure->getAnchorPoint().x * _selectedFigure->getContentSize().width - ORIGIN.x,
-                ty = selRect.getMaxY() - _selectedFigure->getAnchorPoint().y * _selectedFigure->getContentSize().height - ORIGIN.y;
-        if (lx < 0 || by < 0 || rx > ADScreen::getVisibleSize().width || ty > ADScreen::getVisibleSize().height)
-            return;
-
-        for (int i = 0; i < _figures.size(); ++i)
-            if (_selectedFigure != _figures[i])
+            // Q: is it a good decision?
+            // if the touch position is outside of the rectangle
+            if (!_selectedFigure->boundingBox().containsPoint(touchLocation))
             {
-                CCRect otherRect(_figures[i]->getPositionX(),
-                                 _figures[i]->getPositionY(),
-                                 _figures[i]->getContentSize().width,
-                                 _figures[i]->getContentSize().height);
-                if (selRect.intersectsRect(otherRect))
-                    return;
+                // or call ccTouchEnded?
+//              _selectedFigure = NULL; // or just return?
+                return;
             }
 
-         _selectedFigure->setPosition(ccpAdd(_selectedFigure->getPosition(),translation));
-    }
+            // calculating length of movement
+            CCPoint prevTouchLocation = convertToNodeSpace(touch->getPreviousLocation());
+            CCPoint translation = ccpSub(touchLocation,prevTouchLocation);
+            CCRect selRect(_selectedFigure->getPositionX()+translation.x,
+                     _selectedFigure->getPositionY()+translation.y,
+                     _selectedFigure->getContentSize().width,
+                     _selectedFigure->getContentSize().height);
 
+            // preventing from moving image outside of screen
+            const CCPoint ORIGIN = ADScreen::getOrigin();
+            float lx = selRect.getMinX() - _selectedFigure->getAnchorPoint().x * _selectedFigure->getContentSize().width - ORIGIN.x,
+                    by = selRect.getMinY() - _selectedFigure->getAnchorPoint().y * _selectedFigure->getContentSize().height - ORIGIN.y,
+                    rx = selRect.getMaxX() - _selectedFigure->getAnchorPoint().x * _selectedFigure->getContentSize().width - ORIGIN.x,
+                    ty = selRect.getMaxY() - _selectedFigure->getAnchorPoint().y * _selectedFigure->getContentSize().height - ORIGIN.y;
+            if (lx < 0 || by < 0 || rx > ADScreen::getVisibleSize().width || ty > ADScreen::getVisibleSize().height)
+                return;
+
+            // preventing from overlapping
+            for (int i = 0; i < _figures.size(); ++i)
+                // it is allowed to overlap "fixed" figures
+                if (_selectedFigure != _figures[i] && _figures[i]->movable())
+                {
+                    CCRect otherRect(_figures[i]->getPositionX(),
+                                     _figures[i]->getPositionY(),
+                                     _figures[i]->getContentSize().width,
+                                     _figures[i]->getContentSize().height);
+                    if (selRect.intersectsRect(otherRect))
+                        return;
+                }
+
+            // moving figure
+            _selectedFigure->setPosition(ccpAdd(_selectedFigure->getPosition(),translation));
+            CCLog("%f %f",_selectedFigure->getPositionX(),_selectedFigure->getPositionY());
+
+            // preventing a figure from moving if it matches the slot
+            if (_gameManager.figureMatchesSlot(*_selectedFigure))
+            {
+                CCLog("hit");
+                _selectedFigure->setPosition(_gameManager.getSlotPosition(*_selectedFigure));
+                _selectedFigure->movable() = false;
+                _selectedFigure = NULL;
+            }
+        }
+    }
+//    else
+//    {
+
+//    }
 }
 
 void GameScene::ccTouchEnded(CCTouch * touch, CCEvent *)
 {
+    if (_selectedFigure != NULL)
+    {
+//        SYSTEMTIME touchTime;
+//        GetSystemTime(&touchTime);
+//        int endTime = touchTime.wSecond * 1000 + touchTime.wMilliseconds;
+
+//        int endTime = f();
+//        if (endTime - _firstTouchTime < MAX_DELTA_TOUCH_TIME)
+//        {
+            CCPoint touchLocation = touch->getLocation();
+            if (touchLocation.getDistanceSq(_firstTouchPosition) < MAX_DELTA_TOUCH_DISTANCE * MAX_DELTA_TOUCH_DISTANCE)
+                _selectedFigure->rotate();
+//        }
+    }
 }

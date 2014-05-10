@@ -3,9 +3,9 @@
 //#define SQRT2 sqrt(2)
 
 
-void Figure::initVertices(const FigureType & type)
+void Figure::initVertices()
 {
-    switch (type)
+    switch (_type)
     {
     case Trapezium:
 //        _vertices.resize(4);
@@ -15,10 +15,11 @@ void Figure::initVertices(const FigureType & type)
     }
 }
 
-Figure::Figure(const FigureType & type, const CCPoint & startPos)
+Figure::Figure(const FigureType & type, const CCPoint & startPos, int angle):
+    _type(type), _angle(angle), _movable(true)
 {
     setAnchorPoint(ccp(0.5,0.5));
-    initVertices(type);
+    initVertices();
     setPosition(startPos);
     drawImage();
     setContentSize(_image->getContentSize());
@@ -28,9 +29,9 @@ Figure::~Figure()
 {
 }
 
-Figure * Figure::create(const FigureType & type, const CCPoint & startPos)
+Figure * Figure::create(const FigureType & type, const CCPoint & startPos, int angle)
 {
-    Figure * fig = new Figure(type,startPos);
+    Figure * fig = new Figure(type,startPos,angle);
     if (fig != NULL)
         fig->autorelease();
     return fig;
@@ -38,7 +39,7 @@ Figure * Figure::create(const FigureType & type, const CCPoint & startPos)
 
 void Figure::drawImage()
 {
-    _image = CCSprite::create("game/figure1.png");
+    _image = CCSprite::create("game/rect.png");
 //    _image->setPosition(ccp(0,0));
     _image->setAnchorPoint(ccp(0,0));
     addChild(_image);
@@ -50,4 +51,10 @@ void Figure::onExit()
     // Event callback that is invoked every time the CCNode leaves the 'stage'.
     // => I doubt that overring this method will be necessary
     CCNodeRGBA::onExit();
+}
+
+void Figure::rotate(bool clockwise)
+{
+    _angle += 45 * (clockwise ? 1 : -1);
+    setRotation(_angle);
 }

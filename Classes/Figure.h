@@ -15,11 +15,15 @@ enum FigureType
 class Figure : public CCNodeRGBA
 {
 private:
-//    vector<CCPoint> _vertices;
-    CCSprite * _image;
 
-    explicit Figure(const FigureType & type = Trapezium, const CCPoint & startPos = ccp(0,0));
-    void initVertices(const FigureType &);
+//  vector<CCPoint> _vertices;
+    CCSprite * _image;
+    FigureType _type;
+    int _angle;
+    bool _movable;
+
+    explicit Figure(const FigureType &, const CCPoint &, int);
+    void initVertices();
     void drawImage();
     void onExit();
 
@@ -27,10 +31,30 @@ private:
     Figure & operator=(const Figure &);
 
 public:
-    // Q: what's the point of using the static method instead of constructor?
-    // A: Cocos requires this method
-    static Figure * create(const FigureType &, const CCPoint &);
+
+    static Figure * create(const FigureType & type = Trapezium, const CCPoint & startPos = ccp(0,0), int angle = 0);
     ~Figure();
+    void rotate(bool clockwise = true);
+
+    FigureType getType() const
+    {
+        return _type;
+    }
+
+    int getAngle() const
+    {
+        return _angle;
+    }
+
+    bool movable() const
+    {
+        return _movable;
+    }
+
+    bool & movable()
+    {
+        return _movable;
+    }
 
 };
 

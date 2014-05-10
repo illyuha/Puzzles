@@ -4,7 +4,7 @@
 #include "cocos2d-A.h"
 #include "Figure.h"
 #include <vector>
-//#define PTM_RATIO 32.0 // Q: is it necessary?
+#include "GameManager.h"
 
 
 using namespace cocos2d;
@@ -14,6 +14,12 @@ class GameScene: public SceneStyle
 private:
     vector<Figure *> _figures;
     Figure * _selectedFigure;
+    int _firstTouchId;
+//    int _firstTouchTime;
+    CCPoint _firstTouchPosition;
+    GameManager & _gameManager;
+//    static const int MAX_DELTA_TOUCH_TIME;
+    static const float MAX_DELTA_TOUCH_DISTANCE;
 
     GameScene();
     bool init();
@@ -23,6 +29,7 @@ private:
     void ccTouchMoved(CCTouch *, CCEvent *);
     void ccTouchEnded(CCTouch *, CCEvent *);
     void initFigures();
+    // TODO: clear all _gameManager's data
 
 public:
     static CCScene * scene();
