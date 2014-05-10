@@ -74,18 +74,6 @@ bool GameScene::init()
     return true;
 }
 
-//long f()
-//{
-//    struct tm t;
-//    t.tm
-//    struct timespec now;
-//    clock_gettime(CLOCK_MONOTONIC, &now);
-//    return now.tv_sec*1000000000LL + now.tv_nsec;
-//    SYSTEMTIME touchTime;
-//    GetSystemTime(&touchTime);
-//    return touchTime.wSecond * 1000 + touchTime.wMilliseconds;
-//}
-
 bool GameScene::ccTouchBegan(CCTouch * touch, CCEvent *)
 {
 //    if (_firstTouchId == -1)
@@ -95,7 +83,8 @@ bool GameScene::ccTouchBegan(CCTouch * touch, CCEvent *)
         for (int i = 0; i < _figures.size() && _selectedFigure == NULL; ++i)
         {
            Figure * fig = _figures[i];
-           if (fig->movable() && fig->boundingBox().containsPoint(touchLocation))
+           CCRect r(fig->boundingBox());
+           if (fig->movable() && fig->/*boundingBox().*/containsPoint(touchLocation))
                _selectedFigure = fig;
         }
         if (_selectedFigure != NULL)
@@ -129,12 +118,12 @@ void GameScene::ccTouchMoved(CCTouch * touch, CCEvent *)
 
             // Q: is it a good decision?
             // if the touch position is outside of the rectangle
-            if (!_selectedFigure->boundingBox().containsPoint(touchLocation))
-            {
+//            if (!_selectedFigure->boundingBox().containsPoint(touchLocation))
+//            {
                 // or call ccTouchEnded?
 //              _selectedFigure = NULL; // or just return?
-                return;
-            }
+//                return;
+//            }
 
             // calculating length of movement
             CCPoint prevTouchLocation = convertToNodeSpace(touch->getPreviousLocation());
@@ -190,16 +179,9 @@ void GameScene::ccTouchEnded(CCTouch * touch, CCEvent *)
 {
     if (_selectedFigure != NULL)
     {
-//        SYSTEMTIME touchTime;
-//        GetSystemTime(&touchTime);
-//        int endTime = touchTime.wSecond * 1000 + touchTime.wMilliseconds;
-
-//        int endTime = f();
-//        if (endTime - _firstTouchTime < MAX_DELTA_TOUCH_TIME)
-//        {
-            CCPoint touchLocation = touch->getLocation();
-            if (touchLocation.getDistanceSq(_firstTouchPosition) < MAX_DELTA_TOUCH_DISTANCE * MAX_DELTA_TOUCH_DISTANCE)
-                _selectedFigure->rotate();
-//        }
+        CCPoint touchLocation = touch->getLocation();
+        // TODO: check some deltaTime value
+        if (touchLocation.getDistanceSq(_firstTouchPosition) < MAX_DELTA_TOUCH_DISTANCE * MAX_DELTA_TOUCH_DISTANCE)
+            _selectedFigure->rotate();
     }
 }

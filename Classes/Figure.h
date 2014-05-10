@@ -15,8 +15,7 @@ enum FigureType
 class Figure : public CCNodeRGBA
 {
 private:
-
-//  vector<CCPoint> _vertices;
+    vector<CCPoint> _vertices;
     CCSprite * _image;
     FigureType _type;
     int _angle;
@@ -35,6 +34,7 @@ public:
     static Figure * create(const FigureType & type = Trapezium, const CCPoint & startPos = ccp(0,0), int angle = 0);
     ~Figure();
     void rotate(bool clockwise = true);
+    bool containsPoint(const CCPoint &) const;
 
     FigureType getType() const
     {

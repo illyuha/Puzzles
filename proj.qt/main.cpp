@@ -18,7 +18,7 @@ int CALLBACK WinMain(
 
     // TODO: use sprite sheet
 
-    // Q: when should I used pointers?
+    // Q: when should I use pointers?
 
     AppDelegate app;
 
