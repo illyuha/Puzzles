@@ -2,18 +2,45 @@
 #include <ADLib.h>
 #include <math.h>
 #define PI 3.14159265358979323846
-//#define SQRT2 sqrt(2)
-
+#define SQRT2 sqrt(2)
 
 void Figure::initVertices()
 {
-    switch (_type)
+    // Q: should I use Factory (Method)?
+    switch (_shape)
     {
-    case Trapezium:
-        CCPoint v[] = {ccp(0,0), ccp(0,100), ccp(40,100), ccp(140,0)};
+    case SmallTrapezium:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(0,100), ccp(100*SQRT2-100,100), ccp(100*SQRT2,0)};
         _vertices = vector<CCPoint>(v,v+4);
-        break;
     }
+        break;
+    case Triangle:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(0,100), ccp(100,0)};
+        _vertices = vector<CCPoint>(v,v+3);
+    }
+        break;
+    case LargeTrapezium:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(0,100), ccp(200,100), ccp(300,0)};
+        _vertices = vector<CCPoint>(v,v+4);
+    }
+        break;
+    case KFigure:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(50*SQRT2,50*SQRT2), ccp(100-50*SQRT2,100), ccp(100+50*SQRT2,100), ccp(200+50*SQRT2,0)};
+        _vertices = vector<CCPoint>(v,v+5);
+    }
+        break;
+    case SmallTrapeziumR:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(100*SQRT2,100), ccp(100*SQRT2,0)};
+        _vertices = vector<CCPoint>(v,v+4);
+    }
+        // TODO: define other figures' vertices
+    }
+
     Figure * thisFigure = const_cast<Figure *>(this);
     static const float k = _image->getContentSize().height / 100.0;
     for (int i = 0; i < _vertices.size(); ++i)
@@ -26,8 +53,8 @@ void Figure::initVertices()
     }
 }
 
-Figure::Figure(const FigureType & type, const CCPoint & startPos, int angle):
-    _type(type), _angle(angle), _movable(true)
+Figure::Figure(const FigureShape & shape, const CCPoint & startPos, int angle):
+    _shape(shape), _angle(angle), _movable(true)
 {
     setAnchorPoint(ccp(0.5,0.5));
     setPosition(startPos);
@@ -40,9 +67,9 @@ Figure::~Figure()
 {
 }
 
-Figure * Figure::create(const FigureType & type, const CCPoint & startPos, int angle)
+Figure * Figure::create(const FigureShape & shape, const CCPoint & startPos, int angle)
 {
-    Figure * fig = new Figure(type,startPos,angle);
+    Figure * fig = new Figure(shape,startPos,angle);
     if (fig != NULL)
         fig->autorelease();
     return fig;
@@ -50,7 +77,34 @@ Figure * Figure::create(const FigureType & type, const CCPoint & startPos, int a
 
 void Figure::drawImage()
 {
-    _image = CCSprite::create("game/rect.png");
+    switch (_shape)
+    {
+    case SmallTrapezium:
+        _image = CCSprite::create("game/small_trapezium.png");
+        break;
+    case Triangle:
+        _image = CCSprite::create("game/triangle.png");
+        break;
+    case LargeTrapezium:
+        _image = CCSprite::create("game/large_trapezium.png");
+        break;
+    case KFigure:
+        _image = CCSprite::create("game/k_figure.png");
+        break;
+    case SmallTrapeziumR:
+        _image = CCSprite::create("game/small_trapezium_r.png");
+        break;
+    case TriangleR:
+        _image = CCSprite::create("game/triangle_r.png");
+        break;
+    case LargeTrapeziumR:
+        _image = CCSprite::create("game/large_trapezium_r.png");
+        break;
+    case KFigureR:
+        _image = CCSprite::create("game/k_figure_r.png");
+        break;
+    }
+
 //    _image->setPosition(ccp(0,0));
     _image->setAnchorPoint(ccp(0,0));
     addChild(_image);

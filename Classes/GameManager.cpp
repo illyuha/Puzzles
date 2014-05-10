@@ -26,11 +26,16 @@ GameManager & GameManager::getInstance()
 
 void GameManager::loadFigures(vector<Figure *> & figures)
 {
-    figures.resize(1);
+    figures.resize(4);
     const CCPoint ORIGIN = ADScreen::getOrigin();
-    figures[0] = Figure::create(Trapezium,ccp(200,100+ORIGIN.y));
-    setSlot(figures[0],ccp(400,400+ORIGIN.y),45);
-    //    _figures[1] = Figure::create(Trapezium,ccp(400,300+ORIGIN.y));
+    figures[0] = Figure::create(Triangle,ccp(200,200+ORIGIN.y));
+    setSlot(figures[0],ccp(300,300+ORIGIN.y),270);
+    figures[1] = Figure::create(SmallTrapeziumR,ccp(200,800+ORIGIN.y));
+    setSlot(figures[1],ccp(250,350+ORIGIN.y),315);
+    figures[2] = Figure::create(KFigure,ccp(500,800+ORIGIN.y));
+    setSlot(figures[2],ccp(300,550+ORIGIN.y),270);
+    figures[3] = Figure::create(LargeTrapezium,ccp(500,200+ORIGIN.y));
+    setSlot(figures[3],ccp(300,750+ORIGIN.y),90);
 }
 
 void GameManager::setSlot(const Figure * const figure, const CCPoint & point, int angle)
