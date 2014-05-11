@@ -85,25 +85,25 @@ void Figure::drawImage()
         _image = CCSprite::create("game/small_trapezium.png");
         break;
     case Triangle:
-        _image = CCSprite::create("game/triangle.png");
+        _image = CCSprite::create("game/shapes/triangle.png");
         break;
     case LargeTrapezium:
-        _image = CCSprite::create("game/large_trapezium.png");
+        _image = CCSprite::create("game/shapes/large_trapezium.png");
         break;
     case KFigure:
-        _image = CCSprite::create("game/k_figure.png");
+        _image = CCSprite::create("game/shapes/k_figure.png");
         break;
     case SmallTrapeziumR:
-        _image = CCSprite::create("game/small_trapezium_r.png");
+        _image = CCSprite::create("game/shapes/small_trapezium_r.png");
         break;
     case TriangleR:
-        _image = CCSprite::create("game/triangle_r.png");
+        _image = CCSprite::create("game/shapes/triangle_r.png");
         break;
     case LargeTrapeziumR:
-        _image = CCSprite::create("game/large_trapezium_r.png");
+        _image = CCSprite::create("game/shapes/large_trapezium_r.png");
         break;
     case KFigureR:
-        _image = CCSprite::create("game/k_figure_r.png");
+        _image = CCSprite::create("game/shapes/k_figure_r.png");
         break;
     }
 

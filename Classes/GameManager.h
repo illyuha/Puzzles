@@ -4,6 +4,7 @@
 #include <tuple>
 #include "cocos2d-A.h"
 #include "Figure.h"
+#include "Puzzle.h"
 
 
 using namespace std;
@@ -25,6 +26,9 @@ private:
     static const float ALLOWED_DISTANCE_TO_SLOT;
 
     map<const Figure * const, Slot > _slots;
+    int _currentPuzzleNumber;
+    // Oh my God...
+    CCPoint _puzzlePosition;
 
     GameManager();
     void setSlot(const Figure * const, const CCPoint &, int);
@@ -35,7 +39,9 @@ public:
 
     static GameManager & getInstance();
 
-    void loadFigures(vector<Figure *> &);
+    // TODO: find out why this works (and why Point*-argument does not)
+    void loadNextPuzzle(Puzzle * &);
+    void loadFigures(vector<Figure *> & figures);
     bool figureMatchesSlot(const Figure &);
 
     CCPoint getSlotPosition(const Figure & figure)

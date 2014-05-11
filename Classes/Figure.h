@@ -33,6 +33,7 @@ private:
 
 public:
 
+    // Q: do I need to specify the default position?
     static Figure * create(const FigureShape & shape = Triangle, const CCPoint & startPos = ccp(0,0));
     ~Figure();
     void rotate(float n = 1/*bool clockwise = true*/);

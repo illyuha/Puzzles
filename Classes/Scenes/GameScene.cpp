@@ -11,6 +11,12 @@ void GameScene::initFigures()
         addChild(_figures[i]);
 }
 
+void GameScene::initPuzzle()
+{
+    _gameManager.loadNextPuzzle(_puzzle);
+    addChild(_puzzle);
+}
+
 GameScene::GameScene():
     _firstTouchId(-1), _gameManager(GameManager::getInstance())
 {
@@ -63,6 +69,7 @@ bool GameScene::init()
     if (!SceneStyle::init())
         return false;
 
+    initPuzzle();
     initFigures();
 
     // TODO: return false if something wrong happens
