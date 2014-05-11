@@ -7,8 +7,6 @@
 #include "Puzzle.h"
 
 
-using namespace std;
-
 class GameManager
 {
 private:
@@ -24,11 +22,11 @@ private:
 
     static const Slot NON_SLOT;
     static const float ALLOWED_DISTANCE_TO_SLOT;
+    static const int LEVELS_NUMBER;
 
-    map<const Figure * const, Slot > _slots;
+    map< const Figure * const, Slot > _slots;
     int _currentPuzzleNumber;
-    // Oh my God...
-    CCPoint _puzzlePosition;
+    int _movingFiguresLeft;
 
     GameManager();
     void setSlot(const Figure * const, const CCPoint &, int);
@@ -40,14 +38,24 @@ public:
     static GameManager & getInstance();
 
     // TODO: find out why this works (and why Point*-argument does not)
-    void loadNextPuzzle(Puzzle * &);
-    void loadFigures(vector<Figure *> & figures);
+    // TODOL try without bool
+    bool prepareNextLevel(Puzzle * & puzzle, vector<Figure *> & figures);
     bool figureMatchesSlot(const Figure &);
 
-    CCPoint getSlotPosition(const Figure & figure)
+    const CCPoint & getSlotPosition(const Figure & figure)
     {
         return _slots[&figure].position;
     }
+
+    bool levelComplete() const
+    {
+        return (_movingFiguresLeft == 0);
+    }
+
+//    bool gameFinished() const
+//    {
+//        return (_currentPuzzleNumber > LEVELS_NUMBER);
+//    }
 
 };
 

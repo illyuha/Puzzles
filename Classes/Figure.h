@@ -1,16 +1,13 @@
 #ifndef FIGURE_H
 #define FIGURE_H
-#include "cocos2d.h"
+#include "cocos2d-A.h"
 #include <vector>
 
-
-using namespace cocos2d;
-using namespace std;
 
 enum FigureShape
 {
     // R means "reverse"
-    SmallTrapezium, Triangle, LargeTrapezium, KFigure, SmallTrapeziumR, TriangleR, LargeTrapeziumR, KFigureR
+    SmallTrapezium, Triangle, LargeTrapezium, KFigure, SmallTrapeziumR, LargeTrapeziumR, KFigureR
 };
 
 class Figure : public CCNodeRGBA

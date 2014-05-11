@@ -1,10 +1,7 @@
 #ifndef PUZZLE_H
 #define PUZZLE_H
-#include "cocos2d.h"
+#include "cocos2d-A.h"
 
-
-using namespace cocos2d;
-//using namespace std;
 
 class Puzzle : public CCNodeRGBA
 {
@@ -23,5 +20,6 @@ public:
     static Puzzle * create(int, const CCPoint &);
 
 };
+
 
 #endif // PUZZLE_H

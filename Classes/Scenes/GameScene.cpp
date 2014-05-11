@@ -4,17 +4,16 @@
 //const int GameScene::MAX_DELTA_TOUCH_TIME = 7000;
 const float GameScene::MAX_DELTA_TOUCH_DISTANCE = 15;
 
-void GameScene::initFigures()
+void GameScene::prepareLevel()
 {
-    _gameManager.loadFigures(_figures);
-    for (int i = 0; i < _figures.size(); ++i)
-        addChild(_figures[i]);
-}
-
-void GameScene::initPuzzle()
-{
-    _gameManager.loadNextPuzzle(_puzzle);
-    addChild(_puzzle);
+    if (_gameManager.prepareNextLevel(_puzzle,_figures))
+    {
+        addChild(_puzzle);
+        for (int i = 0; i < _figures.size(); ++i)
+            addChild(_figures[i]);
+    }
+    else
+        CCLog("Game finished");
 }
 
 GameScene::GameScene():
@@ -69,8 +68,7 @@ bool GameScene::init()
     if (!SceneStyle::init())
         return false;
 
-    initPuzzle();
-    initFigures();
+    prepareLevel();
 
     // TODO: return false if something wrong happens
 
@@ -150,29 +148,37 @@ void GameScene::ccTouchMoved(CCTouch * touch, CCEvent *)
                 return;
 
             // preventing from overlapping
-            for (int i = 0; i < _figures.size(); ++i)
-                // it is allowed to overlap "fixed" figures
-                if (_selectedFigure != _figures[i] && _figures[i]->movable())
-                {
-                    CCRect otherRect(_figures[i]->getPositionX(),
-                                     _figures[i]->getPositionY(),
-                                     _figures[i]->getContentSize().width,
-                                     _figures[i]->getContentSize().height);
-                    if (selRect.intersectsRect(otherRect))
-                        return;
-                }
+//            for (int i = 0; i < _figures.size(); ++i)
+//                // it is allowed to overlap "fixed" figures
+//                if (_selectedFigure != _figures[i] && _figures[i]->movable())
+//                {
+//                    CCRect otherRect(_figures[i]->getPositionX(),
+//                                     _figures[i]->getPositionY(),
+//                                     _figures[i]->getContentSize().width,
+//                                     _figures[i]->getContentSize().height);
+//                    if (selRect.intersectsRect(otherRect))
+//                        return;
+//                }
 
             // moving figure
             _selectedFigure->setPosition(ccpAdd(_selectedFigure->getPosition(),translation));
-            CCLog("%f %f",_selectedFigure->getPositionX(),_selectedFigure->getPositionY());
 
             // preventing a figure from moving if it matches the slot
             if (_gameManager.figureMatchesSlot(*_selectedFigure))
             {
                 CCLog("hit");
+                // TODO: looks awfully
                 _selectedFigure->setPosition(_gameManager.getSlotPosition(*_selectedFigure));
                 _selectedFigure->movable() = false;
                 _selectedFigure = NULL;
+                if (_gameManager.levelComplete())
+                {
+                    removeChild(_puzzle);
+                    for (int i = 0; i < _figures.size(); ++i)
+                        removeChild(_figures[i]);
+                    prepareLevel();
+//                    _gameManager.prepareNextLevel(_puzzle,_figures);
+                }
             }
         }
     }

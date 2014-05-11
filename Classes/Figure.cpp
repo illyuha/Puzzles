@@ -96,9 +96,6 @@ void Figure::drawImage()
     case SmallTrapeziumR:
         _image = CCSprite::create("game/shapes/small_trapezium_r.png");
         break;
-    case TriangleR:
-        _image = CCSprite::create("game/shapes/triangle_r.png");
-        break;
     case LargeTrapeziumR:
         _image = CCSprite::create("game/shapes/large_trapezium_r.png");
         break;

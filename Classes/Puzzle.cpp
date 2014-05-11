@@ -1,4 +1,5 @@
 #include "Puzzle.h"
+#include <string>
 
 
 Puzzle::Puzzle(int num, const CCPoint & startPos)
@@ -32,8 +33,8 @@ void Puzzle::drawPuzzle(int num)
 //    strcat(filename,n);
 //    strcat(filename,".png");
 
-    char filename[] = "game/puzzles/puzzle1.png";
-    _image = CCSprite::create(filename);
+    string filename = string("game/puzzles/puzzle" + ntos(num) + ".png");
+    _image = CCSprite::create(filename.c_str());
     _image->setAnchorPoint(ccp(0,0));
     addChild(_image);
 }
