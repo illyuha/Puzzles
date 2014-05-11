@@ -21,8 +21,9 @@ private:
     FigureShape _shape;
     int _angle;
     bool _movable;
+    float _rotationStep;
 
-    explicit Figure(const FigureShape &, const CCPoint &, int);
+    explicit Figure(const FigureShape &, const CCPoint &);
     void initVertices();
     void drawImage();
     void onExit();
@@ -32,9 +33,9 @@ private:
 
 public:
 
-    static Figure * create(const FigureShape & shape = Triangle, const CCPoint & startPos = ccp(0,0), int angle = 0);
+    static Figure * create(const FigureShape & shape = Triangle, const CCPoint & startPos = ccp(0,0));
     ~Figure();
-    void rotate(bool clockwise = true);
+    void rotate(float n = 1/*bool clockwise = true*/);
     bool containsPoint(const CCPoint &) const;
 
     FigureShape getShape() const
@@ -56,6 +57,13 @@ public:
     {
         return _movable;
     }
+
+//    float rotationStep() const
+//    {
+//        return _rotationStep;
+//    }
+
+    void setRotationStep(int);
 
 };
 

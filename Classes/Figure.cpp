@@ -1,8 +1,10 @@
 #include "Figure.h"
 #include <ADLib.h>
 #include <math.h>
+#include <ctime>
 #define PI 3.14159265358979323846
 #define SQRT2 sqrt(2)
+
 
 void Figure::initVertices()
 {
@@ -53,8 +55,8 @@ void Figure::initVertices()
     }
 }
 
-Figure::Figure(const FigureShape & shape, const CCPoint & startPos, int angle):
-    _shape(shape), _angle(angle), _movable(true)
+Figure::Figure(const FigureShape & shape, const CCPoint & startPos):
+    _shape(shape), _movable(true), _angle(0)
 {
     setAnchorPoint(ccp(0.5,0.5));
     setPosition(startPos);
@@ -67,9 +69,9 @@ Figure::~Figure()
 {
 }
 
-Figure * Figure::create(const FigureShape & shape, const CCPoint & startPos, int angle)
+Figure * Figure::create(const FigureShape & shape, const CCPoint & startPos)
 {
-    Figure * fig = new Figure(shape,startPos,angle);
+    Figure * fig = new Figure(shape,startPos);
     if (fig != NULL)
         fig->autorelease();
     return fig;
@@ -119,10 +121,11 @@ void Figure::onExit()
 }
 
 // TODO: find out why this algo works
-void Figure::rotate(bool clockwise)
+void Figure::rotate(float n/*, bool clockwise*/)
 {
-    float alpha = 45 * (clockwise ? 1 : -1);
-    _angle += alpha;
+//    float alpha = 45 * (clockwise ? 1 : -1);
+    float alpha = _rotationStep * n;
+    _angle = int(_angle + alpha) % 360;
 
     // rotating round the point (0;0)
     alpha *= -1;
@@ -156,4 +159,11 @@ bool Figure::containsPoint(const CCPoint & point) const
             odd = !odd;
     }
     return odd;
+}
+
+void Figure::setRotationStep(int step)
+{
+    _rotationStep = step;
+    srand(time(0));
+    rotate(rand() % (360 / step));
 }

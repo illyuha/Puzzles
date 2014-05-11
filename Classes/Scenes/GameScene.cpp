@@ -2,7 +2,7 @@
 #include <ADLib/ADString.h>
 
 //const int GameScene::MAX_DELTA_TOUCH_TIME = 7000;
-const float GameScene::MAX_DELTA_TOUCH_DISTANCE = 10;
+const float GameScene::MAX_DELTA_TOUCH_DISTANCE = 15;
 
 void GameScene::initFigures()
 {
