@@ -11,3 +11,8 @@ string ntos(int n)
     }
     return s;
 }
+
+//int random()
+//{
+//    return rand() % 12;
+//}

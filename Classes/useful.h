@@ -7,5 +7,7 @@ using namespace std;
 
 string ntos(int n);
 
+//int random();
+
 
 #endif // USEFUL_H

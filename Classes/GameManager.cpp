@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 
 bool operator==(const GameManager::Slot & a, const GameManager::Slot & b)
@@ -49,33 +50,53 @@ bool GameManager::prepareNextLevel(Puzzle * & puzzle, vector<Figure *> & figures
     string filename = "D:/Cocos/cocos2d-x/projects/Puzzles/Resources_storage/images-normal/game/text/level"
             + ntos(_currentPuzzleNumber) + ".txt";
     ifstream fin(filename);
-    int figNum = 4;
+    int figNum = 6;
 
     figures.resize(figNum);
     float dx = puzzlePosition.x, dy = puzzlePosition.y;
-    CCPoint positions[] = {ccp(150,200), ccp(150,850), ccp(600,850), ccp(600,200), ccp(200,500), ccp(500,500)};
-    for (int i = 0; i < 6; ++i)
+    CCPoint positions[] = {ccp(150,200), ccp(150,850), ccp(600,850), ccp(600,200), ccp(150,500), ccp(600,500)};
+    for (int i = 0; i < figNum; ++i)
     {
         positions[i].x += ORIGIN.x;
         positions[i].y += ORIGIN.y;
     }
 
-    for (int i = 0; i < figNum; ++i)
+    srand(time(NULL));
+    int indices[] = {0,1,2,3,4,5};
+    random_shuffle(indices,indices+figNum);
+    FigureShape ar[] = {Triangle, SmallTrapezium, SmallTrapeziumR, LargeTrapezium, LargeTrapeziumR, KFigure, KFigureR};
+    set<FigureShape> shapes(ar,ar+7);
+
+    for (int i = 0; i < 4; ++i)
     {
-        string shape;
+        string sshape;
         int x, y, angle;
-        fin >> shape >> x >> y >> angle;
-        if (shape == "Triangle")
-            figures[i] = Figure::create(Triangle,positions[i]);
-        else if (shape == "SmallTrapeziumR")
-            figures[i] = Figure::create(SmallTrapeziumR,positions[i]);
-        else if (shape == "KFigure")
-            figures[i] = Figure::create(KFigure,positions[i]);
-        else if (shape == "LargeTrapezium")
-            figures[i] = Figure::create(LargeTrapezium,positions[i]);
-        // TODO: complete this list...
+        fin >> sshape >> x >> y >> angle;
+        FigureShape shape;
+        if (sshape == "Triangle")
+            shape = Triangle;
+        else if (sshape == "SmallTrapeziumR")
+            shape = SmallTrapeziumR;
+        else if (sshape == "KFigure")
+            shape = KFigure;
+        else if (sshape == "LargeTrapezium")
+            shape = LargeTrapezium;
+        else if (sshape == "SmallTrapezium")
+            shape = SmallTrapezium;
+        else if (sshape == "KFigureR")
+            shape = KFigureR;
+        else if (sshape == "LargeTrapeziumR")
+            shape = LargeTrapeziumR;
+        figures[i] = Figure::create(shape,positions[indices[i]]);
+        shapes.erase(shape);
         setSlot(figures[i],ccp(x+dx,y+dy),angle);
     }
+
+    auto it = shapes.begin();
+    FigureShape remaining[] = {*it++, *it++, *it};
+    random_shuffle(remaining,remaining+shapes.size());
+    figures[4] = Figure::create(remaining[0],positions[indices[4]]);
+    figures[5] = Figure::create(remaining[2],positions[indices[5]]);
 
     for (int i = 0; i < figures.size(); ++i)
         figures[i]->setRotationStep(45);

@@ -40,7 +40,18 @@ void Figure::initVertices()
         CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(100*SQRT2,100), ccp(100*SQRT2,0)};
         _vertices = vector<CCPoint>(v,v+4);
     }
-        // TODO: define other figures' vertices
+    case KFigureR:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(100+100*SQRT2,100), ccp(150*SQRT2,50*SQRT2), ccp(200*SQRT2,0)};
+        _vertices = vector<CCPoint>(v,v+5);
+    }
+        break;
+    case LargeTrapeziumR:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(300,100), ccp(300,0)};
+        _vertices = vector<CCPoint>(v,v+4);
+    }
+        break;
     }
 
     Figure * thisFigure = const_cast<Figure *>(this);
@@ -82,7 +93,7 @@ void Figure::drawImage()
     switch (_shape)
     {
     case SmallTrapezium:
-        _image = CCSprite::create("game/small_trapezium.png");
+        _image = CCSprite::create("game/shapes/small_trapezium.png");
         break;
     case Triangle:
         _image = CCSprite::create("game/shapes/triangle.png");
