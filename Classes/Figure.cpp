@@ -169,9 +169,8 @@ bool Figure::containsPoint(const CCPoint & point) const
     return odd;
 }
 
-void Figure::setRotationStep(int step)
+void Figure::rotateRandomly()
 {
-    _rotationStep = step;
-    srand(time(0));
-    rotate(rand() % (360 / step));
+    srand(time(NULL));
+    rotate(rand() % (360 / int(_rotationStep)));
 }

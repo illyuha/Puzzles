@@ -164,7 +164,7 @@ void GameScene::ccTouchMoved(CCTouch * touch, CCEvent *)
             _selectedFigure->setPosition(ccpAdd(_selectedFigure->getPosition(),translation));
 
             // preventing a figure from moving if it matches the slot
-            if (_gameManager.figureMatchesSlot(*_selectedFigure))
+            if (_gameManager.figureMatchesSlot(const_cast<const Figure * const>(_selectedFigure)))
             {
                 CCLog("hit");
                 // TODO: looks awfully

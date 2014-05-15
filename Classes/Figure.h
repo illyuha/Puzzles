@@ -35,6 +35,7 @@ public:
     ~Figure();
     void rotate(float n = 1/*bool clockwise = true*/);
     bool containsPoint(const CCPoint &) const;
+    void rotateRandomly();
 
     FigureShape getShape() const
     {
@@ -61,7 +62,10 @@ public:
 //        return _rotationStep;
 //    }
 
-    void setRotationStep(int);
+    float & rotationStep()
+    {
+        return _rotationStep;
+    }
 
 };
 

@@ -1,5 +1,0 @@
-Triangle 50 49 0
-SmallTrapeziumR 84 178 180
-KFigure 151 294 135
-LargeTrapezium 156 157 315
-

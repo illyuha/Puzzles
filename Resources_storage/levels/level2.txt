@@ -2,4 +2,5 @@ Triangle 50 50 270
 SmallTrapeziumR 15 87 315
 KFigure 50 245 270
 LargeTrapezium 50 437 90
-
+LargeTrapeziumR
+SmallTrapezium

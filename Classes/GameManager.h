@@ -14,6 +14,7 @@ private:
     {
         int angle;
         CCPoint position;
+        // Q: is filled ever used?
         bool filled;
         Slot(int a = 0, const CCPoint & p = ccp(0,0), bool f = false):
             angle(a), position(p), filled(f)
@@ -25,6 +26,7 @@ private:
     static const int LEVELS_NUMBER;
 
     map< const Figure * const, Slot > _slots;
+    // NB: not the best name for class field
     int _currentPuzzleNumber;
     int _movingFiguresLeft;
 
@@ -40,7 +42,7 @@ public:
     // TODO: find out why this works (and why Point*-argument does not)
     // TODOL try without bool
     bool prepareNextLevel(Puzzle * & puzzle, vector<Figure *> & figures);
-    bool figureMatchesSlot(const Figure &);
+    bool figureMatchesSlot(const Figure * const);
 
     const CCPoint & getSlotPosition(const Figure & figure)
     {
