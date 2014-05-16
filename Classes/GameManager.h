@@ -4,20 +4,18 @@
 #include <tuple>
 #include "cocos2d-A.h"
 #include "Figure.h"
-#include "Puzzle.h"
 
 
 class GameManager
 {
 private:
+    // TODO: rename this structure
     struct Slot
     {
         int angle;
         CCPoint position;
-        // Q: is filled ever used?
-        bool filled;
-        Slot(int a = 0, const CCPoint & p = ccp(0,0), bool f = false):
-            angle(a), position(p), filled(f)
+        Slot(int a = 0, const CCPoint & p = ccp(0,0)):
+            angle(a), position(p)
         {}
     };
 
@@ -26,23 +24,23 @@ private:
     static const int LEVELS_NUMBER;
 
     map< const Figure * const, Slot > _slots;
-    // NB: not the best name for class field
-    int _currentPuzzleNumber;
     int _movingFiguresLeft;
 
     GameManager();
-    void setSlot(const Figure * const, const CCPoint &, int);
 
 public:
     friend bool operator==(const GameManager::Slot &, const GameManager::Slot &);
     friend bool operator!=(const GameManager::Slot &, const GameManager::Slot &);
 
+    // Q: or pointer?
     static GameManager & getInstance();
 
     // TODO: find out why this works (and why Point*-argument does not)
-    // TODOL try without bool
-    bool prepareNextLevel(Puzzle * & puzzle, vector<Figure *> & figures);
-    bool figureMatchesSlot(const Figure * const);
+    // TODO: try without bool
+    bool figureMatchesSlot(const Figure * const);    
+    void clearGameData();
+    void setSlot(const Figure * const, const CCPoint &, int);
+    vector<CCPoint> getShapeVertices(const FigureShape &) const;
 
     const CCPoint & getSlotPosition(const Figure & figure)
     {
@@ -53,11 +51,6 @@ public:
     {
         return (_movingFiguresLeft == 0);
     }
-
-//    bool gameFinished() const
-//    {
-//        return (_currentPuzzleNumber > LEVELS_NUMBER);
-//    }
 
 };
 

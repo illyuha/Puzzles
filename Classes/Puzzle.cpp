@@ -2,7 +2,7 @@
 #include <string>
 
 
-Puzzle::Puzzle(int num, const CCPoint & startPos)
+Puzzle::Puzzle(int num, const CCPoint & startPos, const PuzzleData &)
 {
     setAnchorPoint(ccp(0,0));
     setPosition(startPos);
@@ -14,9 +14,9 @@ Puzzle::~Puzzle()
 {
 }
 
-Puzzle * Puzzle::create(int num, const CCPoint & startPos)
+Puzzle * Puzzle::create(int num, const CCPoint & startPos, const PuzzleData & data)
 {
-    Puzzle * puz = new Puzzle(num,startPos);
+    Puzzle * puz = new Puzzle(num,startPos,data);
     if (puz != NULL)
         puz->autorelease();
     return puz;
@@ -24,15 +24,6 @@ Puzzle * Puzzle::create(int num, const CCPoint & startPos)
 
 void Puzzle::drawPuzzle(int num)
 {
-    // TODO: find out what's wrong here
-    // (STATUS_STACK_BUFFER_OVERRUN encountered)
-
-//    char * n = new char[100/*1+sizeof(char)*(num/10+1)*/];
-//    itoa(num,n,10);
-//    char filename[] = "game/puzzles/puzzle";
-//    strcat(filename,n);
-//    strcat(filename,".png");
-
     string filename = string("game/puzzles/puzzle" + ntos(num) + ".png");
     _image = CCSprite::create(filename.c_str());
     _image->setAnchorPoint(ccp(0,0));

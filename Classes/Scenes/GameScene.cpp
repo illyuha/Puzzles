@@ -1,33 +1,78 @@
 #include "GameScene.h"
 #include <ADLib/ADString.h>
+#include <algorithm>
+
 
 //const int GameScene::MAX_DELTA_TOUCH_TIME = 7000;
 const float GameScene::MAX_DELTA_TOUCH_DISTANCE = 15;
 
+void GameScene::clearLevel()
+{
+    _gameManager.clearGameData();
+    removeChild(_puzzle);
+    for (uint i = 0; i < _figures.size(); ++i)
+        removeChild(_figures[i]);
+}
+
 void GameScene::prepareLevel()
 {
-    if (_gameManager.prepareNextLevel(_puzzle,_figures))
+    clearLevel();
+
+    LevelData lvlData = _levelsManager.getLevelData(_currentLevelNumber);
+
+    static const CCPoint ORIGIN = ADScreen::getOrigin();
+    CCPoint puzzlePosition = ccp(300+ORIGIN.x,250+ORIGIN.y);
+    _puzzle = Puzzle::create(_currentLevelNumber,puzzlePosition,lvlData.puzzle);
+    addChild(_puzzle);
+
+    float dx = puzzlePosition.x, dy = puzzlePosition.y;
+
+    CCPoint positions[] = {ccp(150,200), ccp(150,850), ccp(600,850), ccp(600,200), ccp(150,600), ccp(600,600)};
+    for (int i = 0; i < _levelsManager.FIGURES_IN_LEVEL; ++i)
     {
-        addChild(_puzzle);
-        for (int i = 0; i < _figures.size(); ++i)
-            addChild(_figures[i]);
+        positions[i].x += ORIGIN.x;
+        positions[i].y += ORIGIN.y;
     }
-    else
-        CCLog("Game finished");
+
+    srand(time(NULL));
+    int indices[] = {0,1,2,3,4,5};
+    random_shuffle(indices,indices+_levelsManager.FIGURES_IN_PUZZLE);
+
+    _figures.resize(_levelsManager.FIGURES_IN_LEVEL);
+    for (uint i = 0; i < _figures.size(); ++i)
+    {
+        _figures[i] = Figure::create(lvlData.shapes[i],positions[indices[i]]);
+        _figures[i]->setAnchorPoint(ccp(0.5,0.5));
+        addChild(_figures[i]);
+        _figures[i]->setVertices(_gameManager.getShapeVertices(_figures[i]->getShape()));
+        if (i < 4) // i.e. if shape is a part of puzzle
+        {
+            int x = lvlData.puzzle.positions[i].x,
+                    y = lvlData.puzzle.positions[i].y,
+                    angle = lvlData.puzzle.angles[i];
+            _gameManager.setSlot(_figures[i],ccp(x+dx,y+dy),angle);
+        }
+        _figures[i]->rotationStep() = 45;
+        _figures[i]->rotateRandomly();
+    }
+
 }
 
-GameScene::GameScene():
-    _firstTouchId(-1), _gameManager(GameManager::getInstance())
+GameScene::GameScene(uint initialLevelNumber):
+    _firstTouchId(-1),
+    _gameManager(GameManager::getInstance()),
+    _levelsManager(LevelsManager::getInstance()),
+    _currentLevelNumber(initialLevelNumber)
 {
 }
 
-CCScene * GameScene::scene()
+CCScene * GameScene::scene(uint initialLevelNumber)
 {
     // 'scene' is an autorelease object
     CCScene * scene = CCScene::create();
 
     // 'layer' is an autorelease object
-    GameScene * layer = GameScene::create();
+    GameScene * layer = GameScene::create(initialLevelNumber);
 
     // add layer as a child to scene
     scene->addChild(layer);
@@ -36,9 +81,9 @@ CCScene * GameScene::scene()
     return scene;
 }
 
-GameScene * GameScene::create()
+GameScene * GameScene::create(uint initialLevelNumber)
 {
-    GameScene * pRet = new GameScene();
+    GameScene * pRet = new GameScene(initialLevelNumber);
     if (pRet && pRet->init())
     {
         pRet->autorelease();
@@ -88,8 +133,7 @@ bool GameScene::ccTouchBegan(CCTouch * touch, CCEvent *)
         for (int i = 0; i < _figures.size() && _selectedFigure == NULL; ++i)
         {
            Figure * fig = _figures[i];
-           CCRect r(fig->boundingBox());
-           if (fig->movable() && fig->/*boundingBox().*/containsPoint(touchLocation))
+           if (fig->movable() && fig->containsPoint(touchLocation))
                _selectedFigure = fig;
         }
         if (_selectedFigure != NULL)
@@ -173,11 +217,9 @@ void GameScene::ccTouchMoved(CCTouch * touch, CCEvent *)
                 _selectedFigure = NULL;
                 if (_gameManager.levelComplete())
                 {
-                    removeChild(_puzzle);
-                    for (int i = 0; i < _figures.size(); ++i)
-                        removeChild(_figures[i]);
-                    prepareLevel();
-//                    _gameManager.prepareNextLevel(_puzzle,_figures);
+                    // Q: will it be better if use signals and slots?
+//                    ++_currentLevelNumber;
+//                    prepareLevel();
                 }
             }
         }

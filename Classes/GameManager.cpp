@@ -1,11 +1,12 @@
 #include "GameManager.h"
 #include <fstream>
 #include <algorithm>
+#define SQRT2 sqrt(2)
 
 
 bool operator==(const GameManager::Slot & a, const GameManager::Slot & b)
 {
-    return (a.angle == b.angle && a.position.equals(b.position) && a.filled == b.filled);
+    return (a.angle == b.angle && a.position.equals(b.position)/* && a.filled == b.filled*/);
 }
 
 bool operator!=(const GameManager::Slot & a, const GameManager::Slot & b)
@@ -13,12 +14,12 @@ bool operator!=(const GameManager::Slot & a, const GameManager::Slot & b)
     return !(a == b);
 }
 
-const GameManager::Slot GameManager::NON_SLOT = Slot(21,ccp(-13,-13),false);
+const GameManager::Slot GameManager::NON_SLOT = Slot(21,ccp(-13,-13)/*,false*/);
 const float GameManager::ALLOWED_DISTANCE_TO_SLOT = 10;
 const int GameManager::LEVELS_NUMBER = 2;
 
 GameManager::GameManager():
-    _currentPuzzleNumber(0), _movingFiguresLeft(4)
+    _movingFiguresLeft(4)
 {
 }
 
@@ -28,91 +29,59 @@ GameManager & GameManager::getInstance()
     return instance;
 }
 
-//#include <xutility>
-#include <map>
-
-bool GameManager::prepareNextLevel(Puzzle * & puzzle, vector<Figure *> & figures)
+vector<CCPoint> GameManager::getShapeVertices(const FigureShape & shape) const
 {
-    CCLog("Level #%d",_currentPuzzleNumber);
-    ++_currentPuzzleNumber;
-    _movingFiguresLeft = 4;
-    _slots.clear();
-
-    if (_currentPuzzleNumber > LEVELS_NUMBER)
-        //_currentPuzzleNumber = 1;//
-        return false;
-
-    // loading puzzle
-    static const CCPoint ORIGIN = ADScreen::getOrigin();
-    CCPoint puzzlePosition = ccp(300+ORIGIN.x,250+ORIGIN.y);
-    puzzle = Puzzle::create(_currentPuzzleNumber,puzzlePosition);
-
-    static const int figNum = 6;
-    figures.resize(figNum);
-    float dx = puzzlePosition.x, dy = puzzlePosition.y;
-    CCPoint positions[] = {ccp(150,200), ccp(150,850), ccp(600,850), ccp(600,200), ccp(150,600), ccp(600,600)};
-    for (int i = 0; i < figNum; ++i)
+    vector<CCPoint> vertices;
+    switch (shape)
     {
-        positions[i].x += ORIGIN.x;
-        positions[i].y += ORIGIN.y;
-    }
-
-    srand(time(NULL));
-    int indices[] = {0,1,2,3,4,5};
-    random_shuffle(indices,indices+figNum);
-
-    // Compiler bug  with to_string()  =(
-//    string filename = "game/text/level" + ntos(_currentPuzzleNumber) + ".txt";
-
-    unsigned long fileSize = 0;
-    string fullPath = CCFileUtils::sharedFileUtils()->fullPathForFilename(string("levels/level"+ntos(_currentPuzzleNumber)+".txt").c_str());
-    unsigned char * fileContents = CCFileUtils::sharedFileUtils()->getFileData(fullPath.c_str(),"r",&fileSize);
-    string contents;
-    contents.append((char *)fileContents);
-    delete fileContents;
-    fileContents = NULL;
-    istringstream fin(contents);
-
-    for (int i = 0; i < figNum; ++i)
+    case SmallTrapezium:
     {
-        string sshape;
-        int x, y, angle;
-        fin >> sshape;
-        FigureShape shape;
-        if (sshape == "Triangle")
-            shape = Triangle;
-        else if (sshape == "SmallTrapeziumR")
-            shape = SmallTrapeziumR;
-        else if (sshape == "KFigure")
-            shape = KFigure;
-        else if (sshape == "LargeTrapezium")
-            shape = LargeTrapezium;
-        else if (sshape == "SmallTrapezium")
-            shape = SmallTrapezium;
-        else if (sshape == "KFigureR")
-            shape = KFigureR;
-        else if (sshape == "LargeTrapeziumR")
-            shape = LargeTrapeziumR;
-        figures[i] = Figure::create(shape,positions[indices[i]]);
-        if (i < 4) // i.e. if shape is a part of puzzle
-        {
-            fin >> x >> y >> angle;
-            setSlot(figures[i],ccp(x+dx,y+dy),angle);
-        }
+        CCPoint v[] = {ccp(0,0), ccp(0,100), ccp(100*SQRT2-100,100), ccp(100*SQRT2,0)};
+        vertices = vector<CCPoint>(v,v+4);
     }
-
-    for (int i = 0; i < figures.size(); ++i)
+        break;
+    case Triangle:
     {
-        figures[i]->rotationStep() = 45;
-        figures[i]->rotateRandomly();
+        CCPoint v[] = {ccp(0,0), ccp(0,100), ccp(100,0)};
+        vertices = vector<CCPoint>(v,v+3);
     }
-
-    return true;
+        break;
+    case LargeTrapezium:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(0,100), ccp(200,100), ccp(300,0)};
+        vertices = vector<CCPoint>(v,v+4);
+    }
+        break;
+    case KFigure:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(50*SQRT2,50*SQRT2), ccp(100-50*SQRT2,100), ccp(100+50*SQRT2,100), ccp(200+50*SQRT2,0)};
+        vertices = vector<CCPoint>(v,v+5);
+    }
+        break;
+    case SmallTrapeziumR:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(100*SQRT2,100), ccp(100*SQRT2,0)};
+        vertices = vector<CCPoint>(v,v+4);
+    }
+    case KFigureR:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(100+100*SQRT2,100), ccp(150*SQRT2,50*SQRT2), ccp(200*SQRT2,0)};
+        vertices = vector<CCPoint>(v,v+5);
+    }
+        break;
+    case LargeTrapeziumR:
+    {
+        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(300,100), ccp(300,0)};
+        vertices = vector<CCPoint>(v,v+4);
+    }
+        break;
+    }
+    return vertices;
 }
 
 void GameManager::setSlot(const Figure * const figure, const CCPoint & point, int angle)
 {
-    _slots[figure] = Slot(angle,point,false);
+    _slots[figure] = Slot(angle,point/*,false*/);
 }
 
 bool GameManager::figureMatchesSlot(const Figure * const figure)
@@ -125,4 +94,10 @@ bool GameManager::figureMatchesSlot(const Figure * const figure)
     if (hit)
         --_movingFiguresLeft;
     return hit;
+}
+
+void GameManager::clearGameData()
+{
+    _slots.clear();
+    _movingFiguresLeft = 4;
 }

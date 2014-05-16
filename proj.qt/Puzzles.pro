@@ -47,7 +47,8 @@ SOURCES += \
     PurchaseEmulator.cpp \
     ../Classes/GameManager.cpp \
     ../Classes/Puzzle.cpp \
-    ../Classes/useful.cpp
+    ../Classes/useful.cpp \
+    ../Classes/LevelsManager.cpp
 
 HEADERS += \
     ../Classes/AppDelegate.h \
@@ -60,5 +61,6 @@ HEADERS += \
     main.h \
     ../Classes/GameManager.h \
     ../Classes/Puzzle.h \
-    ../Classes/useful.h
+    ../Classes/useful.h \
+    ../Classes/LevelsManager.h
 

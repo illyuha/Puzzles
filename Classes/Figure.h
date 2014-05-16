@@ -21,7 +21,7 @@ private:
     float _rotationStep;
 
     explicit Figure(const FigureShape &, const CCPoint &);
-    void initVertices();
+//    void initVertices();
     void drawImage();
     void onExit();
 
@@ -29,13 +29,13 @@ private:
     Figure & operator=(const Figure &);
 
 public:
-
     // Q: do I need to specify the default position?
     static Figure * create(const FigureShape & shape = Triangle, const CCPoint & startPos = ccp(0,0));
     ~Figure();
     void rotate(float n = 1/*bool clockwise = true*/);
     bool containsPoint(const CCPoint &) const;
     void rotateRandomly();
+    void setVertices(const vector<CCPoint> &);
 
     FigureShape getShape() const
     {
@@ -56,11 +56,6 @@ public:
     {
         return _movable;
     }
-
-//    float rotationStep() const
-//    {
-//        return _rotationStep;
-//    }
 
     float & rotationStep()
     {

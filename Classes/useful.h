@@ -1,6 +1,7 @@
 #ifndef USEFUL_H
 #define USEFUL_H
 #include <string>
+#define uint size_t
 
 
 using namespace std;

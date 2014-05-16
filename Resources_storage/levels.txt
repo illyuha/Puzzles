@@ -1,0 +1,15 @@
+2
+
+KFigure 151 294 135
+LargeTrapezium 156 157 315
+SmallTrapeziumR 84 178 180
+Triangle 50 49 0
+LargeTrapeziumR
+SmallTrapezium
+
+Triangle 50 50 270
+SmallTrapeziumR 15 87 315
+KFigure 50 245 270
+LargeTrapezium 50 437 90
+LargeTrapeziumR
+SmallTrapezium

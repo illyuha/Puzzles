@@ -3,77 +3,15 @@
 #include <math.h>
 #include <ctime>
 #define PI 3.14159265358979323846
-#define SQRT2 sqrt(2)
 
-
-void Figure::initVertices()
-{
-    // Q: should I use Factory (Method)?
-    switch (_shape)
-    {
-    case SmallTrapezium:
-    {
-        CCPoint v[] = {ccp(0,0), ccp(0,100), ccp(100*SQRT2-100,100), ccp(100*SQRT2,0)};
-        _vertices = vector<CCPoint>(v,v+4);
-    }
-        break;
-    case Triangle:
-    {
-        CCPoint v[] = {ccp(0,0), ccp(0,100), ccp(100,0)};
-        _vertices = vector<CCPoint>(v,v+3);
-    }
-        break;
-    case LargeTrapezium:
-    {
-        CCPoint v[] = {ccp(0,0), ccp(0,100), ccp(200,100), ccp(300,0)};
-        _vertices = vector<CCPoint>(v,v+4);
-    }
-        break;
-    case KFigure:
-    {
-        CCPoint v[] = {ccp(0,0), ccp(50*SQRT2,50*SQRT2), ccp(100-50*SQRT2,100), ccp(100+50*SQRT2,100), ccp(200+50*SQRT2,0)};
-        _vertices = vector<CCPoint>(v,v+5);
-    }
-        break;
-    case SmallTrapeziumR:
-    {
-        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(100*SQRT2,100), ccp(100*SQRT2,0)};
-        _vertices = vector<CCPoint>(v,v+4);
-    }
-    case KFigureR:
-    {
-        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(100+100*SQRT2,100), ccp(150*SQRT2,50*SQRT2), ccp(200*SQRT2,0)};
-        _vertices = vector<CCPoint>(v,v+5);
-    }
-        break;
-    case LargeTrapeziumR:
-    {
-        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(300,100), ccp(300,0)};
-        _vertices = vector<CCPoint>(v,v+4);
-    }
-        break;
-    }
-
-    Figure * thisFigure = const_cast<Figure *>(this);
-    static const float k = _image->getContentSize().height / 100.0;
-    for (int i = 0; i < _vertices.size(); ++i)
-    {
-        CCPoint * p = &_vertices[i];
-        p->x *= k;
-        p->y *= k;
-        p->x -= _image->getContentSize().width * thisFigure->getAnchorPoint().x;
-        p->y -= _image->getContentSize().height * thisFigure->getAnchorPoint().y;
-    }
-}
 
 Figure::Figure(const FigureShape & shape, const CCPoint & startPos):
     _shape(shape), _movable(true), _angle(0)
 {
-    setAnchorPoint(ccp(0.5,0.5));
     setPosition(startPos);
     drawImage();
     setContentSize(_image->getContentSize());
-    initVertices();
+//    initVertices();
 }
 
 Figure::~Figure()
@@ -118,14 +56,6 @@ void Figure::drawImage()
 //    _image->setPosition(ccp(0,0));
     _image->setAnchorPoint(ccp(0,0));
     addChild(_image);
-}
-
-void Figure::onExit()
-{
-    // TODO: check when this method is invoked
-    // Event callback that is invoked every time the CCNode leaves the 'stage'.
-    // => I doubt that overring this method will be necessary
-    CCNodeRGBA::onExit();
 }
 
 // TODO: find out why this algo works
@@ -173,4 +103,27 @@ void Figure::rotateRandomly()
 {
     srand(time(NULL));
     rotate(rand() % (360 / int(_rotationStep)));
+}
+
+void Figure::setVertices(const vector<CCPoint> & vertices)
+{
+    _vertices = vertices;
+    Figure * thisFigure = const_cast<Figure *>(this);
+    static const float k = _image->getContentSize().height / 100.0;
+    for (int i = 0; i < _vertices.size(); ++i)
+    {
+        CCPoint * p = &_vertices[i];
+        p->x *= k;
+        p->y *= k;
+        p->x -= _image->getContentSize().width * thisFigure->getAnchorPoint().x;
+        p->y -= _image->getContentSize().height * thisFigure->getAnchorPoint().y;
+    }
+}
+
+void Figure::onExit()
+{
+    // TODO: check when this method is invoked
+    // Event callback that is invoked every time the CCNode leaves the 'stage'.
+    // => I doubt that overring this method will be necessary
+    CCNodeRGBA::onExit();
 }

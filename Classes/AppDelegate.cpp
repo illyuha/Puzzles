@@ -6,8 +6,9 @@
 #include <sstream>
 #include <string>
 #include "Scenes/GameScene.h"
-
+#include "LevelsManager.h"
 #include <ADLib.h>
+
 USING_NS_CC;
 
 
@@ -175,10 +176,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
 
+    LevelsManager::getInstance().initFromFile("levels.txt");
 
-    //std::ifstream is(CCFileUtils::sharedFileUtils()->fullPathFromRelativeFile());
     // create a scene. it's an autorelease object
-    CCScene *pScene = GameScene::scene();
+    CCScene *pScene = GameScene::scene(1);
 
     // run
     pDirector->runWithScene(pScene);

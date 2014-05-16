@@ -3,10 +3,8 @@
 
 		
 		<file>
-			<name>level1.txt</name>
+			<name>levels.txt</name>
 		</file>
-		<file>
-			<name>level2.txt</name>
-		</file>
+		
 	
 </directory>

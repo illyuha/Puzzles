@@ -6,6 +6,7 @@
 #include <vector>
 #include "GameManager.h"
 #include "Puzzle.h"
+#include "LevelsManager.h"
 
 
 class GameScene: public SceneStyle
@@ -18,23 +19,26 @@ private:
 //    int _firstTouchTime;
     CCPoint _firstTouchPosition;
     GameManager & _gameManager;
+    LevelsManager & _levelsManager;
+    uint _currentLevelNumber;
 
 //    static const int MAX_DELTA_TOUCH_TIME;
     static const float MAX_DELTA_TOUCH_DISTANCE;
 
-    GameScene();
+    GameScene(uint);
     bool init();
     void onBackClick();
     void onTick(float);
     bool ccTouchBegan(CCTouch *, CCEvent *);
     void ccTouchMoved(CCTouch *, CCEvent *);
     void ccTouchEnded(CCTouch *, CCEvent *);
+    void clearLevel();
     void prepareLevel();
     // TODO: clear all _gameManager's data
 
 public:
-    static CCScene * scene();
-    static GameScene * create();
+    static CCScene * scene(uint);
+    static GameScene * create(uint);
 };
 
 #endif // GAMESCENE_H
