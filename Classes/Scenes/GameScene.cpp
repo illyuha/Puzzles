@@ -18,6 +18,9 @@ void GameScene::prepareLevel()
 {
     clearLevel();
 
+    if (_currentLevelNumber > _levelsManager.numberOfLevels())
+        return;
+
     LevelData lvlData = _levelsManager.getLevelData(_currentLevelNumber);
 
     static const CCPoint ORIGIN = ADScreen::getOrigin();
@@ -56,6 +59,7 @@ void GameScene::prepareLevel()
         _figures[i]->rotateRandomly();
     }
 
+    ++_currentLevelNumber;
 }
 
 GameScene::GameScene(uint initialLevelNumber):
@@ -101,9 +105,12 @@ void GameScene::onBackClick()
 {
     // seems that it is unncecessary
     _selectedFigure = NULL;
+
+    _gameManager.clearGameData();
+    exit(0);
 }
 
-void GameScene::onTick(float dt)
+void GameScene::onTick(float /*dt*/)
 {
     // is this method necessary?
 }
@@ -183,13 +190,13 @@ void GameScene::ccTouchMoved(CCTouch * touch, CCEvent *)
                      _selectedFigure->getContentSize().height);
 
             // preventing from moving image outside of screen
-            const CCPoint ORIGIN = ADScreen::getOrigin();
-            float lx = selRect.getMinX() - _selectedFigure->getAnchorPoint().x * _selectedFigure->getContentSize().width - ORIGIN.x,
-                    by = selRect.getMinY() - _selectedFigure->getAnchorPoint().y * _selectedFigure->getContentSize().height - ORIGIN.y,
-                    rx = selRect.getMaxX() - _selectedFigure->getAnchorPoint().x * _selectedFigure->getContentSize().width - ORIGIN.x,
-                    ty = selRect.getMaxY() - _selectedFigure->getAnchorPoint().y * _selectedFigure->getContentSize().height - ORIGIN.y;
-            if (lx < 0 || by < 0 || rx > ADScreen::getVisibleSize().width || ty > ADScreen::getVisibleSize().height)
-                return;
+//            const CCPoint ORIGIN = ADScreen::getOrigin();
+//            float lx = selRect.getMinX() - _selectedFigure->getAnchorPoint().x * _selectedFigure->getContentSize().width - ORIGIN.x,
+//                    by = selRect.getMinY() - _selectedFigure->getAnchorPoint().y * _selectedFigure->getContentSize().height - ORIGIN.y,
+//                    rx = selRect.getMaxX() - _selectedFigure->getAnchorPoint().x * _selectedFigure->getContentSize().width - ORIGIN.x,
+//                    ty = selRect.getMaxY() - _selectedFigure->getAnchorPoint().y * _selectedFigure->getContentSize().height - ORIGIN.y;
+//            if (lx < 0 || by < 0 || rx > ADScreen::getVisibleSize().width || ty > ADScreen::getVisibleSize().height)
+//                return;
 
             // preventing from overlapping
 //            for (int i = 0; i < _figures.size(); ++i)
@@ -218,6 +225,9 @@ void GameScene::ccTouchMoved(CCTouch * touch, CCEvent *)
                 if (_gameManager.levelComplete())
                 {
                     // Q: will it be better if use signals and slots?
+                    CCCallFunc* moveCallback = CCCallFunc::create(this, callfunc_selector(GameScene::prepareLevel));
+                    CCDelayTime* delayAction = CCDelayTime::create(3.0f);
+                    this->runAction(CCSequence::create(delayAction, moveCallback, NULL));
 //                    ++_currentLevelNumber;
 //                    prepareLevel();
                 }

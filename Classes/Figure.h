@@ -23,6 +23,7 @@ private:
     explicit Figure(const FigureShape &, const CCPoint &);
 //    void initVertices();
     void drawImage();
+    // Q: is it necessary?
     void onExit();
 
     Figure(const Figure &);

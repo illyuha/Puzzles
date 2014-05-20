@@ -55,7 +55,6 @@ public:
 };
 
 bool operator==(const GameManager::Slot & a, const GameManager::Slot & b);
-
 bool operator!=(const GameManager::Slot & a, const GameManager::Slot & b);
 
 #endif // GAMEMANAGER_H

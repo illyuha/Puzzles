@@ -1,4 +1,4 @@
-2
+3
 
 KFigure 151 294 135
 LargeTrapezium 156 157 315
@@ -7,9 +7,16 @@ Triangle 50 49 0
 LargeTrapeziumR
 SmallTrapezium
 
-Triangle 50 50 270
-SmallTrapeziumR 15 87 315
 KFigure 50 245 270
 LargeTrapezium 50 437 90
+SmallTrapeziumR 15 87 315
+Triangle 50 50 270
 LargeTrapeziumR
+SmallTrapezium
+
+KFigureR 66 136 315
+LargeTrapeziumR 152 353 90
+SmallTrapeziumR 272 353 180
+Triangle 53 353 270
+KFigure
 SmallTrapezium
