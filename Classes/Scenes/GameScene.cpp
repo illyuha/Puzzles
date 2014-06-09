@@ -21,18 +21,32 @@ void GameScene::prepareLevel()
     if (_currentLevelNumber > _levelsManager.numberOfLevels())
         return;
 
+
     LevelData lvlData = _levelsManager.getLevelData(_currentLevelNumber);
 
     static const CCPoint ORIGIN = ADScreen::getOrigin();
-    CCPoint puzzlePosition = ccp(300+ORIGIN.x,250+ORIGIN.y);
-    _puzzle = Puzzle::create(_currentLevelNumber,puzzlePosition,lvlData.puzzle);
+    static const CCSize VISIBLE_SIZE = ADScreen::getVisibleSize();
+
+    _puzzle = Puzzle::create(_currentLevelNumber,lvlData.puzzle);
+    _puzzle->setPosition(ccp(0.5*VISIBLE_SIZE.width+ORIGIN.x,0.5*VISIBLE_SIZE.height+ORIGIN.y));
+    _puzzle->setAnchorPoint(ccp(0.5,0.5));
+
+    float scale = 0.5 * VISIBLE_SIZE.width / _puzzle->getContentSize().width;
+    scale = min(scale,0.75 * VISIBLE_SIZE.height / _puzzle->getContentSize().height);
+
+    _puzzle->setScale(scale);
     addChild(_puzzle);
 
-    float dx = puzzlePosition.x, dy = puzzlePosition.y;
+    float dx = _puzzle->getPositionX() -
+                _puzzle->getAnchorPoint().x * _puzzle->getContentSize().width * _puzzle->getScaleX(),
+            dy = _puzzle->getPositionY() -
+                _puzzle->getAnchorPoint().y * _puzzle->getContentSize().height * _puzzle->getScaleY();
 
-    CCPoint positions[] = {ccp(150,200), ccp(150,850), ccp(600,850), ccp(600,200), ccp(150,600), ccp(600,600)};
-    for (int i = 0; i < _levelsManager.FIGURES_IN_LEVEL; ++i)
+    CCPoint positions[] = {ccp(0.2,0.25), ccp(0.2,0.5), ccp(0.2,0.75), ccp(0.8,0.75), ccp(0.8,0.5), ccp(0.8,0.2)};
+    for (uint i = 0; i < _levelsManager.FIGURES_IN_LEVEL; ++i)
     {
+        positions[i].x *= VISIBLE_SIZE.width;
+        positions[i].y *= VISIBLE_SIZE.height;
         positions[i].x += ORIGIN.x;
         positions[i].y += ORIGIN.y;
     }
@@ -44,19 +58,21 @@ void GameScene::prepareLevel()
     _figures.resize(_levelsManager.FIGURES_IN_LEVEL);
     for (uint i = 0; i < _figures.size(); ++i)
     {
-        _figures[i] = Figure::create(lvlData.shapes[i],positions[indices[i]]);
-        _figures[i]->setAnchorPoint(ccp(0.5,0.5));
-        addChild(_figures[i]);
-        _figures[i]->setVertices(_gameManager.getShapeVertices(_figures[i]->getShape()));
+        _figures[i] = Figure::create(lvlData.shapes[i]);
+        Figure * fig = _figures[i];
+        fig->setPosition(positions[indices[i]]);
+        fig->setVertices(_gameManager.getShapeVertices(fig->getShape()));
+        fig->setScale(scale);
+        fig->rotationStep() = 45;
+        fig->rotateRandomly();
+        addChild(fig);
         if (i < 4) // i.e. if shape is a part of puzzle
         {
-            int x = lvlData.puzzle.positions[i].x,
+            float x = lvlData.puzzle.positions[i].x,
                     y = lvlData.puzzle.positions[i].y,
                     angle = lvlData.puzzle.angles[i];
-            _gameManager.setSlot(_figures[i],ccp(x+dx,y+dy),angle);
+            _gameManager.setSlot(fig,ccp(x*scale+dx,y*scale+dy),angle);
         }
-        _figures[i]->rotationStep() = 45;
-        _figures[i]->rotateRandomly();
     }
 
     ++_currentLevelNumber;
@@ -103,7 +119,7 @@ GameScene * GameScene::create(uint initialLevelNumber)
 
 void GameScene::onBackClick()
 {
-    // seems that it is unncecessary
+    // Q: is it unncecessary?
     _selectedFigure = NULL;
 
     _gameManager.clearGameData();
@@ -137,7 +153,7 @@ bool GameScene::ccTouchBegan(CCTouch * touch, CCEvent *)
     {
         CCPoint touchLocation = touch->getLocation();
         _selectedFigure = NULL;
-        for (int i = 0; i < _figures.size() && _selectedFigure == NULL; ++i)
+        for (uint i = 0; i < _figures.size() && _selectedFigure == NULL; ++i)
         {
            Figure * fig = _figures[i];
            if (fig->movable() && fig->containsPoint(touchLocation))

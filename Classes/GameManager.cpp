@@ -54,7 +54,7 @@ vector<CCPoint> GameManager::getShapeVertices(const FigureShape & shape) const
         break;
     case KFigure:
     {
-        CCPoint v[] = {ccp(0,0), ccp(50*SQRT2,50*SQRT2), ccp(100-50*SQRT2,100), ccp(100+50*SQRT2,100), ccp(200+50*SQRT2,0)};
+        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(100+100*SQRT2,100), ccp(150*SQRT2,50*SQRT2), ccp(200*SQRT2,0)};
         vertices = vector<CCPoint>(v,v+5);
     }
         break;
@@ -63,9 +63,10 @@ vector<CCPoint> GameManager::getShapeVertices(const FigureShape & shape) const
         CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(100*SQRT2,100), ccp(100*SQRT2,0)};
         vertices = vector<CCPoint>(v,v+4);
     }
+        break;
     case KFigureR:
     {
-        CCPoint v[] = {ccp(0,0), ccp(100,100), ccp(100+100*SQRT2,100), ccp(150*SQRT2,50*SQRT2), ccp(200*SQRT2,0)};
+        CCPoint v[] = {ccp(200*SQRT2,0), ccp(200*SQRT2-100,100), ccp(100*SQRT2-100,100), ccp(50*SQRT2,50*SQRT2),  ccp(0,0)};
         vertices = vector<CCPoint>(v,v+5);
     }
         break;

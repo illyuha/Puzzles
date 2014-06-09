@@ -67,3 +67,6 @@ documentation/latex
 *.pyc
 
 !proj.wp*/wp8/HelloCpp/HelloCpp/Resources
+
+Resources_storage/images-normal/game/puzzles/*.png
+Resources_storage/images-normal/game/shapes/*.png

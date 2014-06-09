@@ -23,7 +23,7 @@ class Puzzle : public CCNodeRGBA
 private:
     CCSprite * _image;
 
-    Puzzle(int, const CCPoint &, const PuzzleData &);
+    Puzzle(int, const PuzzleData &);
     explicit Puzzle();
     void drawPuzzle(int);
 
@@ -33,7 +33,7 @@ private:
 public:
     ~Puzzle();
 
-    static Puzzle * create(int, const CCPoint &, const PuzzleData &);
+    static Puzzle * create(int, const PuzzleData &);
 
 };
 

@@ -6,9 +6,13 @@
 
 using namespace std;
 
-string ntos(int n);
-
-//int random();
+template<typename T>
+string ntos(const T & v)
+{
+    stringstream ss;
+    ss << v;
+    return ss.str();
+}
 
 
 #endif // USEFUL_H

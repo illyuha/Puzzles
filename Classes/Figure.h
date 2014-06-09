@@ -20,7 +20,7 @@ private:
     bool _movable;
     float _rotationStep;
 
-    explicit Figure(const FigureShape &, const CCPoint &);
+    explicit Figure(const FigureShape &);
 //    void initVertices();
     void drawImage();
     // Q: is it necessary?
@@ -31,12 +31,13 @@ private:
 
 public:
     // Q: do I need to specify the default position?
-    static Figure * create(const FigureShape & shape = Triangle, const CCPoint & startPos = ccp(0,0));
+    static Figure * create(const FigureShape & shape = Triangle);
     ~Figure();
     void rotate(float n = 1/*bool clockwise = true*/);
     bool containsPoint(const CCPoint &) const;
     void rotateRandomly();
     void setVertices(const vector<CCPoint> &);
+    void setScale(float);
 
     FigureShape getShape() const
     {

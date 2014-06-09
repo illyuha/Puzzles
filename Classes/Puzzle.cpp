@@ -2,10 +2,10 @@
 #include <string>
 
 
-Puzzle::Puzzle(int num, const CCPoint & startPos, const PuzzleData &)
+Puzzle::Puzzle(int num, const PuzzleData &)
 {
-    setAnchorPoint(ccp(0,0));
-    setPosition(startPos);
+//    setAnchorPoint(ccp(0,0));
+//    setPosition(startPos);
     drawPuzzle(num);
     setContentSize(_image->getContentSize());
 }
@@ -14,9 +14,9 @@ Puzzle::~Puzzle()
 {
 }
 
-Puzzle * Puzzle::create(int num, const CCPoint & startPos, const PuzzleData & data)
+Puzzle * Puzzle::create(int num, const PuzzleData & data)
 {
-    Puzzle * puz = new Puzzle(num,startPos,data);
+    Puzzle * puz = new Puzzle(num,data);
     if (puz != NULL)
         puz->autorelease();
     return puz;
